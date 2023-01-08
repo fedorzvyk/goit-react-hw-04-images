@@ -26,7 +26,7 @@ export function App() {
       .then(data => {
         // console.log(data);
         if (data.hits.length !== 0 && page === 1) {
-          toast.success(`We find ${data.totalHits} images`);
+          toast.success(`We found ${data.totalHits} images`);
         }
         setImages(images => {
           return page === 1
