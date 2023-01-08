@@ -72,7 +72,10 @@ export function App() {
       setSearchName(newSearchName);
       setPage(1);
       setImages([]);
-    }
+    } else
+      toast.warn(
+        'Your request has already been done. Try to find something new'
+      );
   };
 
   return (
