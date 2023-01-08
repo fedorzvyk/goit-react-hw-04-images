@@ -1,39 +1,38 @@
-import React, { Component } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { Overlay, ModalImage } from './Modal.styled';
 
 const modalRoot = document.querySelector('#modal-root');
 
-export class Modal extends Component {
-  static propTypes = {
-    children: PropTypes.node.isRequired,
-    onClose: PropTypes.func.isRequired,
-  };
+export function Modal({ onClose, children }) {
+  useEffect(() => {
+    document.addEventListener('keydown', handleClose);
 
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleClose);
-  }
+    return () => {
+      document.removeEventListener('keydown', handleClose);
+    };
+  });
 
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleClose);
-  }
-
-  handleClose = e => {
+  const handleClose = e => {
+    // console.log('keydown event: ', e);
     if (e.code === 'Escape') {
-      this.props.onClose();
+      onClose();
     }
     if (e.currentTarget === e.target) {
-      this.props.onClose();
+      onClose();
     }
   };
 
-  render() {
-    return createPortal(
-      <Overlay onClick={this.handleClose}>
-        <ModalImage>{this.props.children}</ModalImage>
-      </Overlay>,
-      modalRoot
-    );
-  }
+  return createPortal(
+    <Overlay onClick={handleClose}>
+      <ModalImage>{children}</ModalImage>
+    </Overlay>,
+    modalRoot
+  );
 }
+
+Modal.propTypes = {
+  children: PropTypes.node.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
